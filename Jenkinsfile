@@ -89,6 +89,9 @@ pipeline {
 				input {
 					message "Deploy to the Prod server ?"
 				}
+				when {
+					branch 'master'
+				}
 				steps {
 					sh './Jenkins/deploy.sh'
 				}
