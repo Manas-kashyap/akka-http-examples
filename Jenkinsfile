@@ -86,11 +86,11 @@ pipeline {
 			// 	}
 			// }
 			stage ('Deploying on the server') {
-				input {
-					message "Deploy to the Prod server ?"
-				}
 				when {
 					branch 'master'
+				}
+				input {
+					message "Deploy to the Prod server ?"
 				}
 				steps {
 					sh './Jenkins/deploy.sh'
