@@ -49,7 +49,7 @@ pipeline {
 			}
 			stage ('Running the Tests for Different Distro') {
 				when {
-					branch 'tests' || 'features'
+					branch 'tests' || branch 'features'
 				}
 				parallel {
 					stage ('Running the Tests in Ubuntu') {
