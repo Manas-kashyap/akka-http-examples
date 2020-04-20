@@ -70,6 +70,14 @@ pipeline {
 					}
 				}
 			}
+			stage ('Packaging the Archive') {
+				when {
+					branch 'master'
+				}
+				steps {
+					sh 'sbt assembly'
+				}
+			}
 
 		}
 	}
