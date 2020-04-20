@@ -1,4 +1,7 @@
 pipeline {
+	options {
+        timeout(time: 1, unit: 'HOURS') 
+    }
 	agent any {
 		stages {
 			stage ('Parallel Stage of Installing Dependency') {
@@ -17,6 +20,26 @@ pipeline {
 						}
 						steps {
 							sh './Jenkins/dependency.sh'
+						}
+					}
+				}
+			}
+			stage ('Compile the Package for Different Distro') {
+				parallel {
+					stage ('Compile the Package for Ubuntu') {
+						agent {
+							label 'ubuntu-slave'
+						}
+						steps {
+							sh 'sbt clean compile'
+						}
+					}
+					stage ('Compile the Package for Debian') {
+						agent {
+							label 'debian-slave'
+						}
+						steps {
+							sh 'sbt clean compile'
 						}
 					}
 				}
