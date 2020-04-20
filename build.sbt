@@ -6,6 +6,8 @@ name := "akka-http-helloworld"
 
 version := "1.0"
 
+mainClass in (Compile, packageBin) := Some("com.madhukaraphatak.akkahttp.AkkaHttpHelloWorld")
+
 scalaVersion := "2.11.5"
 
 libraryDependencies ++= Seq(
