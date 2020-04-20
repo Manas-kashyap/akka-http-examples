@@ -78,13 +78,13 @@ pipeline {
 					sh 'sbt assembly'
 				}
 			}
-			stage ('Archiving the Artifacts') {
-				steps {
-					dir('target/scala-2.11') {
-						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
-					}
-				}
-			}
+			// stage ('Archiving the Artifacts') {
+			// 	steps {
+			// 		dir('target/scala-2.11') {
+			// 			step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
+			// 		}
+			// 	}
+			// }
 			stage ('Deploying on the server') {
 				input {
 					message "Deploy to the Prod server ?"
