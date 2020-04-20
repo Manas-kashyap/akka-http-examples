@@ -14,7 +14,7 @@ pipeline {
 							label 'ubuntu-slave'
 						}
 						steps {
-							sh './Jenkins/dependency.sh'
+							tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
 						}
 					}
 					stage ('Dependency installation in debian slave') {
@@ -78,6 +78,27 @@ pipeline {
 					sh 'sbt assembly'
 				}
 			}
-
+			stage ('Archiving the Artifacts') {
+				steps {
+					dir('target/scala-2.11') {
+						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
+					}
+				}
+			}
+			stage ('Deploying on the server') {
+				input {
+					message "Deploy to the Prod server ?"
+				}
+				steps {
+					sh './Jenkins/deploy.sh'
+				}
+			}
+			post {
+				always {
+					 mail to: 'manas.kashyap@knoldus.com',
+					 subject: "Pipeline: ${currentBuild.fullDisplayName} is ${currentBuild.currentResult}",
+					 body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+				}
+			}
 		}
 	}
