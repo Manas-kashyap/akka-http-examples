@@ -49,7 +49,7 @@ pipeline {
 			}
 			stage ('Running the Tests for Different Distro') {
 				when {
-					branch 'tests' || branch 'features'
+                expression { BRANCH_NAME ==~ /(tests|features)/ }
 				}
 				parallel {
 					stage ('Running the Tests in Ubuntu') {
