@@ -4,7 +4,7 @@ pipeline {
 	options {
         timeout(time: 1, unit: 'HOURS') 
         retry(2)
-         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         }
 		stages {
 			stage ('Parallel Stage of Installing Dependency') {
