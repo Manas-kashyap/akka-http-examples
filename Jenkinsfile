@@ -1,5 +1,8 @@
 pipeline {
-	agent any {
+	agent any 
+	options {
+        timeout(time: 1, unit: 'HOURS') 
+        }
 		stages {
 			stage ('Parallel Stage of Installing Dependency') {
 				parallel {
@@ -43,4 +46,3 @@ pipeline {
 			}
 		}
 	}
-}
