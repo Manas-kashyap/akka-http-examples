@@ -75,7 +75,9 @@ pipeline {
 				}
 			}
 			stage ('Packaging the Archive and Archiving the Artifacts and Deployment') {
-				agent none
+				agent {
+					label 'debian-slave'
+				}
 				when {
 					branch 'master'
 				}
