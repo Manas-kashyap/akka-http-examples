@@ -74,10 +74,8 @@ pipeline {
 					}
 				}
 			}
-			stage ('Packaging the Archivea and Archiving the Artifacts and Deployment') {
-				agent {
-					label 'ubuntu-slave'
-				}
+			stage ('Packaging the Archive and Archiving the Artifacts and Deployment') {
+				agent none
 				when {
 					branch 'master'
 				}
