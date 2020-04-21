@@ -92,6 +92,7 @@ pipeline {
 					sh './Jenkins/deploy.sh'
 				}
 			}
+		}
 		// 	stage ('Deploying on the server') {
 		// 		agent {
 		// 			label 'ubuntu-slave'
@@ -117,5 +118,4 @@ pipeline {
 				cleanWs()
 			}
 		}
-	}
-}
+    }
