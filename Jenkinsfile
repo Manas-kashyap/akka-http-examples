@@ -1,5 +1,8 @@
 pipeline {
-	agent any 
+	agent none
+	environment {
+		CI = 'true'
+	}
 	triggers { pollSCM('H */4 * * 1-5') }
 	options {
         timeout(time: 1, unit: 'HOURS') 
@@ -71,6 +74,9 @@ pipeline {
 				}
 			}
 			stage ('Packaging the Archive') {
+				agent {
+					label 'ubuntu'
+				}
 				when {
 					branch 'master'
 				}
@@ -86,6 +92,9 @@ pipeline {
 			// 	}
 			// }
 			stage ('Deploying on the server') {
+				agent {
+					label 'ubuntu'
+				}
 				when {
 					branch 'master'
 				}
@@ -102,6 +111,9 @@ pipeline {
 				mail to: 'manas.kashyap@knoldus.com',
 				subject: "Pipeline: ${currentBuild.fullDisplayName} is ${currentBuild.currentResult}",
 				body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+			}
+			success {
+				cleanWs()
 			}
 		}
 	}
