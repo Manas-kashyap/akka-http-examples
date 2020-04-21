@@ -74,7 +74,7 @@ pipeline {
 					}
 				}
 			}
-			stage ('Packaging the Archive') {
+			stage ('Packaging the Archivea and Archiving the Artifacts') {
 				agent {
 					label 'ubuntu-slave'
 				}
@@ -83,14 +83,6 @@ pipeline {
 				}
 				steps {
 					sh 'sbt assembly'
-				}
-			}
-			stage ('Archiving the Artifacts') {
-				agent {
-					label 'ubuntu-slave'
-				}
-				when {
-					branch 'master'
 				}
 				steps {
 					dir('target/scala-2.11') {
