@@ -1,10 +1,13 @@
 pipeline {
-	agent any 
+	agent none
+	environment {
+		CI = 'true'
+	}
 	triggers { pollSCM('H */4 * * 1-5') }
 	options {
         timeout(time: 1, unit: 'HOURS') 
         retry(2)
-         buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
         }
 		stages {
 			stage ('Parallel Stage of Installing Dependency') {
@@ -14,7 +17,8 @@ pipeline {
 							label 'ubuntu-slave'
 						}
 						steps {
-							tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
+//							tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
+                            sh './Jenkins/dependency.sh'
 						}
 					}
 					stage ('Dependency installation in debian slave') {
@@ -71,6 +75,9 @@ pipeline {
 				}
 			}
 			stage ('Packaging the Archive') {
+				agent {
+					label 'ubuntu'
+				}
 				when {
 					branch 'master'
 				}
@@ -86,11 +93,14 @@ pipeline {
 			// 	}
 			// }
 			stage ('Deploying on the server') {
-				input {
-					message "Deploy to the Prod server ?"
+				agent {
+					label 'ubuntu'
 				}
 				when {
 					branch 'master'
+				}
+				input {
+					message "Deploy to the Prod server ?"
 				}
 				steps {
 					sh './Jenkins/deploy.sh'
@@ -102,6 +112,9 @@ pipeline {
 				mail to: 'manas.kashyap@knoldus.com',
 				subject: "Pipeline: ${currentBuild.fullDisplayName} is ${currentBuild.currentResult}",
 				body: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n More info at: ${env.BUILD_URL}"
+			}
+			success {
+				cleanWs()
 			}
 		}
 	}
