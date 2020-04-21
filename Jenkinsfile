@@ -76,7 +76,7 @@ pipeline {
 			}
 			stage ('Packaging the Archive') {
 				agent {
-					label 'ubuntu'
+					label 'ubuntu-slave'
 				}
 				when {
 					branch 'master'
@@ -85,16 +85,22 @@ pipeline {
 					sh 'sbt assembly'
 				}
 			}
-			// stage ('Archiving the Artifacts') {
-			// 	steps {
-			// 		dir('target/scala-2.11') {
-			// 			step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
-			// 		}
-			// 	}
-			// }
+			stage ('Archiving the Artifacts') {
+				agent {
+					label 'ubuntu-slave'
+				}
+				when {
+					branch 'master'
+				}
+				steps {
+					dir('target/scala-2.11') {
+						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
+					}
+				}
+			}
 			stage ('Deploying on the server') {
 				agent {
-					label 'ubuntu'
+					label 'ubuntu-slave'
 				}
 				when {
 					branch 'master'
