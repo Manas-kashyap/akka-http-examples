@@ -17,7 +17,8 @@ pipeline {
 							label 'ubuntu-slave'
 						}
 						steps {
-							tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
+//							tool name: 'sbt', type: 'org.jvnet.hudson.plugins.SbtPluginBuilder$SbtInstallation'
+                            sh './Jenkins/dependency.sh'
 						}
 					}
 					stage ('Dependency installation in debian slave') {
