@@ -81,6 +81,9 @@ pipeline {
 				when {
 					branch 'master'
 				}
+				input {
+					message "Package the Artifact and Deploy ?"
+				}
 				steps {
 					sh 'sbt assembly'
 					dir('target/scala-2.11') {
