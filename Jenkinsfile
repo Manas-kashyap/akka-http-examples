@@ -74,7 +74,7 @@ pipeline {
 					}
 				}
 			}
-			stage ('Packaging the Archivea and Archiving the Artifacts') {
+			stage ('Packaging the Archivea and Archiving the Artifacts and Deployment') {
 				agent {
 					label 'ubuntu-slave'
 				}
@@ -89,14 +89,6 @@ pipeline {
 						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
 					}
 				}
-			}
-			stage ('Deploying on the server') {
-				agent {
-					label 'ubuntu-slave'
-				}
-				when {
-					branch 'master'
-				}
 				input {
 					message "Deploy to the Prod server ?"
 				}
@@ -104,7 +96,21 @@ pipeline {
 					sh './Jenkins/deploy.sh'
 				}
 			}
-		}
+		// 	stage ('Deploying on the server') {
+		// 		agent {
+		// 			label 'ubuntu-slave'
+		// 		}
+		// 		when {
+		// 			branch 'master'
+		// 		}
+		// 		input {
+		// 			message "Deploy to the Prod server ?"
+		// 		}
+		// 		steps {
+		// 			sh './Jenkins/deploy.sh'
+		// 		}
+		// 	}
+		// }
 		post {
 			always {
 				mail to: 'manas.kashyap@knoldus.com',
