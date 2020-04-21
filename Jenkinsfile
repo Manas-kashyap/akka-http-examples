@@ -83,16 +83,12 @@ pipeline {
 				}
 				steps {
 					sh 'sbt assembly'
-				}
-				steps {
 					dir('target/scala-2.11') {
 						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
 					}
-				}
-				input {
+					input {
 					message "Deploy to the Prod server ?"
-				}
-				steps {
+				    }  
 					sh './Jenkins/deploy.sh'
 				}
 			}
