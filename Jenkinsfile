@@ -74,39 +74,40 @@ pipeline {
 					}
 				}
 			}
-			stage ('Packaging the Archive') {
+			stage ('Packaging the Archive and Archiving the Artifacts and Deployment') {
 				agent {
-					label 'ubuntu'
-				}
-				when {
-					branch 'master'
-				}
-				steps {
-					sh 'sbt assembly'
-				}
-			}
-			// stage ('Archiving the Artifacts') {
-			// 	steps {
-			// 		dir('target/scala-2.11') {
-			// 			step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
-			// 		}
-			// 	}
-			// }
-			stage ('Deploying on the server') {
-				agent {
-					label 'ubuntu'
+					label 'debian-slave'
 				}
 				when {
 					branch 'master'
 				}
 				input {
-					message "Deploy to the Prod server ?"
+					message "Package the Artifact and Deploy ?"
 				}
 				steps {
+					sh 'sbt assembly'
+					dir('target/scala-2.11') {
+						step([$class: 'ArtifactArchiver', artifacts: 'akka-http-helloworld-assembly-1.0.jar'])
+					}  
 					sh './Jenkins/deploy.sh'
 				}
 			}
 		}
+		// 	stage ('Deploying on the server') {
+		// 		agent {
+		// 			label 'ubuntu-slave'
+		// 		}
+		// 		when {
+		// 			branch 'master'
+		// 		}
+		// 		input {
+		// 			message "Deploy to the Prod server ?"
+		// 		}
+		// 		steps {
+		// 			sh './Jenkins/deploy.sh'
+		// 		}
+		// 	}
+		// }
 		post {
 			always {
 				mail to: 'manas.kashyap@knoldus.com',
@@ -117,4 +118,4 @@ pipeline {
 				cleanWs()
 			}
 		}
-	}
+    }
